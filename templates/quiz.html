@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>{{ quiz.title }}</h2>
+    <form action="{{ url_for('quiz.submit_quiz', quiz_id=quiz.id) }}" method="POST">
+        {% for question in quiz.questions %}
+            <div>
+                <p>{{ question.question_text }}</p>
+                <input type="text" name="answer_{{ question.id }}" required>
+            </div>
+        {% endfor %}
+        <button type="submit">Submit Quiz</button>
+    </form>
+{% endblock %}
