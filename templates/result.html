@@ -2,11 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quiz Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
 </head>
 <body>
-    <h1>Your Results</h1>
-    <p>You got {{ correct }} out of {{ total }} correct.</p>
-    <a href="{{ url_for('index') }}">Take another quiz</a>
+
+    <div class="ui container">
+        <header>
+            <h1 class="ui header center aligned">Quiz Results</h1>
+        </header>
+
+        <div class="ui segment">
+            <h2>Congratulations!</h2>
+            <p>You scored: 8/10</p>
+            <a href="/" class="ui button primary">Go to Home</a>
+        </div>
+    </div>
+
 </body>
 </html>

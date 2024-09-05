@@ -1,74 +1,102 @@
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("Quiz app loaded!");
-
-    // Shuffle questions and options
-    const quizForm = document.querySelector('form');
-    if (quizForm) {
-        shuffleQuestions(quizForm);
+// Example list of questions and answers
+const quizData = [
+    {
+        question: "What is the output of print(2 ** 3)?",
+        options: ["5", "6", "8", "9"],
+        correctAnswer: "8"
+    },
+    {
+        question: "Which of the following is a valid variable name in Python?",
+        options: ["2abc", "_abc", "def", "for"],
+        correctAnswer: "_abc"
+    },
+    {
+        question: "What is the output of print(type([]))?",
+        options: ["<class 'list'>", "<class 'tuple'>", "<class 'dict'>", "<class 'set'>"],
+        correctAnswer: "<class 'list'>"
+    },
+    {
+        question: "Which keyword is used for function declaration in Python?",
+        options: ["function", "void", "def", "lambda"],
+        correctAnswer: "def"
+    },
+    {
+        question: "What does the 'len()' function do in Python?",
+        options: ["Calculates length", "Returns last element", "Sorts items", "Generates sequence"],
+        correctAnswer: "Calculates length"
     }
+];
 
-    // Add a countdown timer
-    const timerDisplay = document.getElementById('timer');
-    if (timerDisplay) {
-        startTimer(60, timerDisplay); // 60 seconds timer
-    }
+let currentQuestion = 0;
+let score = 0;
+const totalQuestions = quizData.length;
+const userAnswers = [];
 
-    // Form submission handling
-    quizForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        let score = 0;
-        const totalQuestions = quizForm.querySelectorAll('.question').length;
-        
-        quizForm.querySelectorAll('.question').forEach(question => {
-            const selectedOption = question.querySelector('input[type="radio"]:checked');
-            if (selectedOption && selectedOption.value === question.dataset.correct) {
-                score++;
-            }
-        });
+// Function to handle quiz submission
+function submitQuiz() {
+    const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+    
+    if (selectedAnswer) {
+        const answerValue = selectedAnswer.value;
+        userAnswers[currentQuestion] = answerValue;
+        checkAnswer(answerValue);  // Function to validate the answer
 
-        alert(`You scored ${score} out of ${totalQuestions}`);
-        this.submit();  // Uncomment this line if you want the form to actually submit after showing the alert
-    });
-
-    // Function to shuffle questions and options
-    function shuffleQuestions(form) {
-        const questions = Array.from(form.querySelectorAll('.question'));
-        questions.forEach(question => {
-            const options = Array.from(question.querySelectorAll('input[type="radio"]'));
-            shuffleArray(options);
-            const parent = options[0].closest('div');
-            options.forEach(option => parent.appendChild(option.closest('label')));
-        });
-        shuffleArray(questions);
-        const parent = form.querySelector('div.questions');
-        questions.forEach(question => parent.appendChild(question));
-    }
-
-    // Utility function to shuffle an array
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
+        // Move to the next question or show the results
+        if (currentQuestion < totalQuestions - 1) {
+            currentQuestion++;
+            loadNextQuestion();
+        } else {
+            showResults();
         }
+    } else {
+        alert("Please select an answer before submitting!");
     }
+}
 
-    // Countdown timer
-    function startTimer(duration, display) {
-        let timer = duration, minutes, seconds;
-        const interval = setInterval(function () {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
+// Function to load the next question
+function loadNextQuestion() {
+    const questionTitle = document.querySelector('#question-title');
+    const options = document.querySelectorAll('input[name="answer"]');
+    const labels = document.querySelectorAll('label');
 
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+    const currentQuiz = quizData[currentQuestion];
+    
+    questionTitle.innerText = `Question ${currentQuestion + 1}: ${currentQuiz.question}`;
+    
+    options.forEach((option, index) => {
+        option.checked = false;  // Reset radio button
+        option.value = currentQuiz.options[index]; // Update value of radio button
+        labels[index].innerText = currentQuiz.options[index];  // Update option text
+    });
+}
 
-            display.textContent = minutes + ":" + seconds;
-
-            if (--timer < 0) {
-                clearInterval(interval);
-                alert("Time's up!");
-                quizForm.submit();  // Automatically submit the form when time's up
-            }
-        }, 1000);
+// Function to check if the selected answer is correct
+function checkAnswer(answerValue) {
+    const correctAnswer = quizData[currentQuestion].correctAnswer;
+    if (answerValue === correctAnswer) {
+        score++;
     }
+}
+
+// Function to display the final results
+function showResults() {
+    const resultMessage = `You scored ${score} out of ${totalQuestions}`;
+    const resultDiv = document.querySelector('#quiz-result');
+    resultDiv.innerText = resultMessage;
+    resultDiv.style.display = 'block';
+}
+
+// Event listener for submit button
+document.querySelector('#submit-btn').addEventListener('click', submitQuiz);
+
+// Show quiz section and load the first question on Start Quiz button click
+document.querySelector('#start-quiz-btn').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent page reload
+    document.querySelector('#quiz-section').style.display = 'block'; // Show the quiz
+    loadNextQuestion();
 });
+
+// Load the first question on page load (if needed)
+window.onload = function() {
+    loadNextQuestion();
+};

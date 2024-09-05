@@ -11,6 +11,10 @@ def index():
     categories = Category.query.all()
     return render_template('index.html', categories=categories)
 
+@app.route('/quiz/start', methods=['GET', 'POST'])
+def start_quiz():
+    return render_template('quiz.html')
+
 @app.route('/quiz/<int:category_id>')
 def quiz(category_id):
     questions = Question.query.filter_by(category_id=category_id).all()

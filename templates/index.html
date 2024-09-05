@@ -2,14 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quiz Categories</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
 </head>
 <body>
-    <h1>Select a Category</h1>
-    <ul>
-        {% for category in categories %}
-        <li><a href="{{ url_for('quiz', category_id=category.id) }}">{{ category.name }}</a></li>
-        {% endfor %}
-    </ul>
+
+    <div class="ui container">
+        <header>
+            <h1 class="ui header center aligned">Quiz App</h1>
+        </header>
+
+        <div class="ui segment">
+            <h2 class="ui center aligned header">Python MCQs and Quizzes</h2>
+            <p>Test your knowledge in Python with our carefully curated questions.</p>
+            <a href="/quiz" id="start-quiz-btn" class="ui primary button center">Start Quiz</a>
+        </div>
+
+        <div id="quiz-section" class="ui segment" style="display:none;">
+            <h2 id="question-title" class="ui header">Question</h2>
+            <div class="ui form">
+                <div class="grouped fields">
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="answer" value="1">
+                            <label>Option 1</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="answer" value="2">
+                            <label>Option 2</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="answer" value="3">
+                            <label>Option 3</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="answer" value="4">
+                            <label>Option 4</label>
+                        </div>
+                    </div>
+                </div>
+                <button id="submit-btn" class="ui button">Submit</button>
+            </div>
+        </div>
+
+        <div id="quiz-result" class="ui message" style="display:none;"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
