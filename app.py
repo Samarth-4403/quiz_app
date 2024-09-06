@@ -20,6 +20,7 @@ def index():
 def login():
     if request.method == 'POST':
         username = request.form['username']
+        # Set new user in session
         session['username'] = username
         return redirect(url_for('index'))
     return render_template('login.html')
