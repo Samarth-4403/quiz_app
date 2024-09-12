@@ -1,38 +1,60 @@
-from flask import Flask, render_template, request, redirect, url_for, session 
-from models import db, Question, Category
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from models import db, Question, Category, User
+from werkzeug.security import check_password_hash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
+
+# Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 app.secret_key = '0123456789'
 
-db.init_app(app)
+# Initialize DB
+db.init_app(app)  # Only initialize SQLAlchemy here
+
+# Initialize Login Manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# Load user for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route('/')
+@login_required
 def index():
-    if 'username' not in session:
-        return redirect(url_for('login'))  # Redirect to login if not authenticated
     categories = Category.query.all()
     return render_template('index.html', categories=categories)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        # Set new user in session
-        session['username'] = username
-        return redirect(url_for('index'))
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(email=email).first()
+
+        if user and user.verify_password(password):
+            login_user(user)
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('index'))
+        else:
+            flash('Invalid email or password')
+            return redirect('/login')
+
     return render_template('login.html')
 
 @app.route('/quiz/<int:category_id>')
+@login_required
 def quiz(category_id):
-    if 'username' not in session:
-        return redirect(url_for('login'))  # Redirect to login if not authenticated
     questions = Question.query.filter_by(category_id=category_id).all()
     return render_template('quiz.html', questions=questions)
 
 @app.route('/result', methods=['POST'])
+@login_required
 def result():
     correct = 0
     total = 0
@@ -44,8 +66,10 @@ def result():
     return render_template('result.html', correct=correct, total=total)
 
 @app.route('/logout')
+@login_required
 def logout():
-    session.pop('username', None)  # Remove 'username' from session
+    logout_user()
+    flash('You have been logged out.')
     return redirect(url_for('login'))
 
 if __name__ == '__main__':

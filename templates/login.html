@@ -13,17 +13,17 @@
             <h2 class="ui header center aligned">Login</h2>
             <form method="POST" action="{{ url_for('login') }}" class="ui form">
                 <div class="field">
-                    <label for="username">Username</label>
-                    <input type="text" name="username" id="username" class="ui input">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" class="ui input" required>
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
-                    <input type="password" name="password" id="password" class="ui input">
+                    <input type="password" name="password" id="password" class="ui input" required>
                 </div>
                 <div class="field">
                     <button type="submit" class="ui primary button">Login</button>
                 </div>
-            </form>
+            </form>            
         </div>
     </div>
 </body>
