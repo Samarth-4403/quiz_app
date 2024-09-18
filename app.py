@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from models import db, Question, Category, User
+from models import db, Question, Category, User, Score
 from werkzeug.security import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+import logging
 
 app = Flask(__name__)
 
@@ -10,6 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = '0123456789'
 
+app.logger.setLevel(logging.DEBUG)
 # Initialize DB
 db.init_app(app)  # Only initialize SQLAlchemy here
 
@@ -52,6 +54,29 @@ def login():
 def quiz(category_id):
     questions = Question.query.filter_by(category_id=category_id).all()
     return render_template('quiz.html', questions=questions)
+
+@app.route('/submit_quiz', methods=['POST'])
+@login_required
+def submit_quiz():
+    correct = 0
+    total = 0
+    for question_id, user_answer in request.form.items():
+        question = Question.query.get(int(question_id))
+        if question and question.correct_answer == user_answer:
+            correct += 1
+        total += 1
+    
+    score = int((correct / total) * 100)  # Calculate percentage score
+    
+    # Save the score in the database
+    new_score = Score(user_id=current_user.user_id, score=score)
+    app.logger.debug("Creating Score object: %s", new_score)
+    db.session.add(new_score)
+    db.session.commit()
+    app.logger.info("Score added to database")
+
+    return redirect(url_for('result', score=score))
+
 
 @app.route('/result', methods=['POST'])
 @login_required

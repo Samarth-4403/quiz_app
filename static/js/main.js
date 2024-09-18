@@ -89,11 +89,15 @@ function showResults() {
 // Event listener for submit button
 document.querySelector('#submit-btn').addEventListener('click', submitQuiz);
 
-// Show quiz section and load the first question on Start Quiz button click
-document.querySelector('#start-quiz-btn').addEventListener('click', function(event) {
-    event.preventDefault(); // Prevent page reload
-    document.querySelector('#quiz-section').style.display = 'block'; // Show the quiz
-    loadNextQuestion();
+// Hide Start Quiz Button and Show Quiz Section on Click
+const startQuizButton = document.querySelector('#start-quiz-btn');
+const quizSection = document.querySelector('#quiz-section');
+
+startQuizButton.addEventListener('click', function(event) {
+  event.preventDefault(); // Prevent page reload
+  startQuizButton.style.display = 'none'; // Hide Start Quiz Button
+  quizSection.style.display = 'block'; // Show Quiz Section
+  loadNextQuestion();
 });
 
 // Load the first question on page load (if needed)

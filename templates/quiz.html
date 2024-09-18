@@ -1,41 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+  <script>
+    function startQuiz() {
+      // No longer needed for hiding the button (handled by CSS)
+      // document.getElementById("startQuizButton").style.display = "none";
+      document.getElementById("quizForm").style.display = "block";
+    }
+  </script>
 </head>
 <body>
 
-    <div class="ui container">
-        <header>
-            <h1 class="ui header center aligned">Python Quiz</h1>
-        </header>
+  <div class="ui container">
+    <header>
+      <h1 class="ui header center aligned">Python Quiz</h1>
+    </header>
 
-        <div class="ui segment">
-            <h3>Question 1: Python is known as?</h3>
-            <div class="ui form">
-                <div class="grouped fields">
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" name="answer" value="1">
-                            <label>Python 1.x</label>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" name="answer" value="2">
-                            <label>Python 2.x</label>
-                        </div>
-                    </div>
-                </div>
+    <div class.ui segment>
+      <button id="startQuizButton" class="ui button primary" onclick="startQuiz()">Start Quiz</button>
+
+      <form id="quizForm" action="/submit_quiz" method="POST">
+        <h3>Question 1: Python is known as?</h3>
+        <div class="ui form">
+          <div class="grouped fields">
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="answer1" value="1">
+                <label>Python 1.x</label>
+              </div>
             </div>
-
-            <a href="/result" class="ui button primary">Submit</a>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="answer1" value="2">
+                <label>Python 2.x</label>
+              </div>
+            </div>
+          </div>
         </div>
+        <button type="submit" class="ui button primary">Submit</button>
+      </form>
     </div>
+  </div>
 
 </body>
 </html>
