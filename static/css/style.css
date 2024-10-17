@@ -30,4 +30,75 @@ button.ui.primary.button {
 
 #startQuizButton {
     display: none;
-  }
+}
+
+/* General styles for dashboard */
+.dashboard-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.score-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.score-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.score-details {
+    color: #888;
+    font-size: 1rem;
+}
+
+/* Table styling */
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.score-table th,
+.score-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.score-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.score-table td {
+    color: #333;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}

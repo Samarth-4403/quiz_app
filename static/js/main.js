@@ -33,6 +33,12 @@ const totalQuestions = quizData.length;
 const userAnswers = [];
 
 // Function to handle quiz submission
+
+function startQuiz() {
+    document.getElementById("quiz-section").style.display = "block";
+    document.getElementById("start-quiz-btn").style.display = "none";
+}
+
 function submitQuiz() {
     const selectedAnswer = document.querySelector('input[name="answer"]:checked');
     

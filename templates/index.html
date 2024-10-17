@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
 </head>
 <body>
-
     <div class="ui container">
         <header>
             <h1 class="ui header center aligned">Quiz App</h1>
@@ -17,7 +16,7 @@
         <div class="ui segment">
             <h2 class="ui center aligned header">Python MCQs and Quizzes</h2>
             <p>Test your knowledge in Python with our carefully curated questions.</p>
-            <a href="/quiz" id="start-quiz-btn" class="ui primary button center">Start Quiz</a>
+            <a href="javascript:void(0);" id="start-quiz-btn" class="ui primary button center" onclick="startQuiz()">Start Quiz</a>
         </div>
 
         <div id="quiz-section" class="ui segment" style="display:none;">
@@ -54,10 +53,17 @@
         </div>
 
         <div id="quiz-result" class="ui message" style="display:none;"></div>
+
+        <a href="{{ url_for('logout') }}" class="ui red button right floated">Logout</a>
+        <a href="{{ url_for('dashboard') }}" class="ui button primary">Go to Dashboard</a>   
     </div>
 
-    <a href="{{ url_for('logout') }}" class="ui red button right floated">Logout</a>
-
+    <script>
+        function startQuiz() {
+            document.getElementById('start-quiz-btn').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+        }
+    </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
