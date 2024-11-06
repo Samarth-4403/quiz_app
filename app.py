@@ -3,7 +3,8 @@ from models import db, Question, Category, User, Score
 from werkzeug.security import generate_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 import logging
-from auth import auth  # Import the auth Blueprint
+from auth import auth
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
@@ -87,9 +88,12 @@ def check_password():
 @app.route('/quiz/<int:category_id>')
 @login_required
 def quiz(category_id):
-    session['quiz_started'] = True
-    questions = Question.query.filter_by(category_id=category_id).all()
-    return render_template('quiz.html', questions=questions)
+  session['quiz_started'] = True
+  questions = Question.query.filter_by(category_id=category_id).all()
+  return render_template('quiz.html', questions=questions, quiz_id=category_id)
+
+def get_quiz_id():
+    return request.form.get('quiz_id')
 
 @app.route('/result/<int:score>', methods=['GET'])  # Add the score as URL parameter
 @login_required
@@ -99,24 +103,33 @@ def result(score):
 @app.route('/submit_quiz', methods=['POST'])
 @login_required
 def submit_quiz():
-    correct = 0
-    total = 0
-    for question_id, user_answer in request.form.items():
-        question = Question.query.get(int(question_id))
-        if question and question.correct_answer == user_answer:
-            correct += 1
-        total += 1
-    
-    score = int((correct / total) * 100)
-    
-    # Save the score in the database
-    new_score = Score(user_id=current_user.user_id, score=score)
-    db.session.add(new_score)
-    db.session.commit()
-    
-    session.pop('quiz_started', None)
+  correct = 0
+  total = 0
+  for question_id, user_answer in request.form.items():
+    question = Question.query.get(int(question_id))
+    if question and question.correct_answer == user_answer:
+      correct += 1
+    total += 1 
 
-    return redirect(url_for('result', score=score))
+  score = int((correct / total) * 100)
+  print(f"Calculated Score: {score}")
+  
+  quiz_id = get_quiz_id() 
+  print(f"Quiz ID: {quiz_id}")
+
+  # Save the score in the database
+  new_score = Score(user_id=current_user.get_id(), score=score, quiz_id=quiz_id) 
+  print(f"New score: {new_score}")
+  db.session.add(new_score)
+  db.session.commit()
+
+  print(f"Score created successfully: {new_score}")
+  print(f"User ID: {new_score.user_id}")
+  print(f"Score: {new_score.score}")
+
+  session.pop('quiz_started', None)  
+
+  return redirect(url_for('result', score=score))
 
 @app.route('/result', methods=['POST'])
 @login_required
@@ -140,8 +153,20 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    scores = Score.query.filter_by(user_id=current_user.user_id).all()
-    return render_template('dashboard.html', scores=scores)
+    user_id = current_user.get_id()
+    print(f"User ID: {user_id}")
+
+    scores = Score.query.filter_by(user_id=user_id).all()
+    print(f"Number of scores: {len(scores)}")
+
+    for score in scores:
+        print(f"Score: {score.score}, Quiz ID: {score.quiz_id}, Category: {score.quiz.category.name}")
+
+    if scores:
+        return render_template('dashboard.html', scores=scores)
+    else:
+        flash("No scores found for this user.")
+        return render_template('dashboard.html', scores=[])
 
 if __name__ == '__main__':
     with app.app_context():

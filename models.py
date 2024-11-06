@@ -46,7 +46,17 @@ class Score(db.Model):
     score_id = db.Column(db.Integer, primary_key=True)
     score = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
+    date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationships
+    quiz = db.relationship('Quiz', backref='scores')
+    
+class Quiz(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    category = db.relationship('Category', backref='quizzes')
 
 # Create the database tables
 with app.app_context():
