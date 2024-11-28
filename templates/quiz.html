@@ -11,9 +11,6 @@
       // Disable the submit button to prevent multiple submissions
       document.getElementById('submit-quiz-btn').disabled = true;
 
-      // Collect user answers and calculate score
-      // ...
-
       // Send the score and user ID to the server using AJAX
       fetch('/submit_quiz', {
         method: 'POST',
@@ -25,14 +22,14 @@
           score: calculated_score
         })
       })
-      .then(response => {
-        // Handle the response, e.g., redirect to the dashboard
-        window.location.href = '/dashboard';
-      })
-      .catch(error => {
-        console.error('Error submitting score:', error);
-        // Handle the error, e.g., display an error message to the user
-      });
+        .then(response => {
+          // Handle the response, e.g., redirect to the dashboard
+          window.location.href = '/dashboard';
+        })
+        .catch(error => {
+          console.error('Error submitting score:', error);
+          // Handle the error, e.g., display an error message to the user
+        });
     }
   </script>
 </head>
@@ -43,11 +40,14 @@
       <h1 class="ui header center aligned">Python Quiz</h1>
     </header>
 
-    <div class.ui segment>
+    <div class="ui segment">
+      <button id="submit-score-button">Submit Score</button>
+    </div>
+    
+    <div class="ui segment">
       <button id="startQuizButton" class="ui button primary" onclick="startQuiz()">Start Quiz</button>
 
-      <form id="quizForm" action="#" method="POST" style="display: none;">
-        <button type="button" id="submit-quiz-btn" class="ui button primary" onclick="submitQuiz()">Submit Quiz</button>
+      <button type="button" id="submit-quiz-btn" class="ui button primary" onclick="submitQuiz()">Submit Quiz</button>
       </form>
     </div>
   </div>

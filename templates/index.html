@@ -16,54 +16,30 @@
         <div class="ui segment">
             <h2 class="ui center aligned header">Python MCQs and Quizzes</h2>
             <p>Test your knowledge in Python with our carefully curated questions.</p>
-            <a href="javascript:void(0);" id="start-quiz-btn" class="ui primary button center" onclick="startQuiz()">Start Quiz</a>
         </div>
-
-        <div id="quiz-section" class="ui segment" style="display:none;">
-            <h2 id="question-title" class="ui header">Question</h2>
+        <form method="POST" action="submit_answers">
+        <div id="quiz-section" class="ui segment">
+            {%for ques in questions%}
+            <h2 id="question-title" class="ui header">{{ques.question}}</h2>
             <div class="ui form">
                 <div class="grouped fields">
+                    {%for opt in ques.options%}
                     <div class="field">
                         <div class="ui radio checkbox">
-                            <input type="radio" name="answer" value="1">
-                            <label>Option 1</label>
+                            <input type="radio" name="answer_{{ ques.id }}" value="{{opt}}">
+                            <label>{{opt}}</label>
                         </div>
-                    </div>
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" name="answer" value="2">
-                            <label>Option 2</label>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" name="answer" value="3">
-                            <label>Option 3</label>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" name="answer" value="4">
-                            <label>Option 4</label>
-                        </div>
+                        {%endfor%}
                     </div>
                 </div>
-                <button id="submit-btn" class="ui button">Submit</button>
             </div>
+            {%endfor%}
+            <button id="submit-btn" class="ui button">Submit</button>
         </div>
-
-        <div id="quiz-result" class="ui message" style="display:none;"></div>
-
+    </form>
         <a href="{{ url_for('logout') }}" class="ui red button right floated">Logout</a>
         <a href="{{ url_for('dashboard') }}" class="ui button primary">Go to Dashboard</a>   
     </div>
 
-    <script>
-        function startQuiz() {
-            document.getElementById('start-quiz-btn').style.display = 'none';
-            document.getElementById('quiz-section').style.display = 'block';
-        }
-    </script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

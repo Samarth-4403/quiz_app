@@ -70,3 +70,14 @@ button.ui.primary.button {
 #startQuizButton:hover {
     background-color: #3e8e41;
 }
+
+#submit-score-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
